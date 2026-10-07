@@ -3,12 +3,101 @@ backend:
   turbo_site_id: a97e09f2-6fca-4bc1-9a49-7bf6c12a9068
   branch: main
 media_folder: "uploads"
-public_folder: "/uploads"
+public_folder: "uploads"
 locale: "hr"
 collections:
   - name: "sadrzaj"
     label: "Sadržaj"
     files:
+      - name: "postavke"
+        label: "⚙️ Postavke stranice"
+        file: "content/settings.json"
+        fields:
+          - {label: "Naziv udruge", name: "site_name", widget: "string"}
+          - {label: "Puni naziv udruge", name: "legal_name", widget: "string"}
+          - {label: "Podružnica", name: "branch_name", widget: "string"}
+          - {label: "Moto / gornja traka", name: "tagline", widget: "string"}
+          - {label: "Logo", name: "logo", widget: "image"}
+          - {label: "Glavna fotografija", name: "hero_image", widget: "image"}
+          - {label: "Hero oznaka", name: "hero_label", widget: "string"}
+          - {label: "Hero naslov", name: "hero_title", widget: "string"}
+          - {label: "Hero tekst", name: "hero_text", widget: "text"}
+          - {label: "O udruzi – naslov", name: "about_title", widget: "string"}
+          - {label: "O udruzi – oznaka", name: "about_eyebrow", widget: "string"}
+          - {label: "O udruzi – tekst", name: "about_text", widget: "text"}
+          - label: "Kartice O udruzi"
+            name: "about_cards"
+            widget: "list"
+            fields:
+              - {label: "Naslov", name: "title", widget: "string"}
+              - {label: "Tekst", name: "text", widget: "text"}
+          - {label: "Ciljevi – oznaka", name: "goals_eyebrow", widget: "string"}
+          - {label: "Ciljevi – naslov", name: "goals_title", widget: "string"}
+          - label: "Ciljevi i aktivnosti"
+            name: "goals"
+            widget: "list"
+            fields:
+              - {label: "Ikona", name: "icon", widget: "string"}
+              - {label: "Naslov", name: "title", widget: "string"}
+              - {label: "Tekst", name: "text", widget: "text"}
+          - {label: "Novosti – oznaka", name: "news_eyebrow", widget: "string"}
+          - {label: "Novosti – naslov", name: "news_title", widget: "string"}
+          - {label: "Dokumenti – oznaka", name: "documents_eyebrow", widget: "string"}
+          - {label: "Dokumenti – naslov", name: "documents_title", widget: "string"}
+          - {label: "Galerija – oznaka", name: "gallery_eyebrow", widget: "string"}
+          - {label: "Galerija – naslov", name: "gallery_title", widget: "string"}
+          - {label: "Galerija – uvodni tekst", name: "gallery_intro", widget: "text"}
+          - {label: "Predsjedništvo – oznaka", name: "board_eyebrow", widget: "string"}
+          - {label: "Predsjedništvo – naslov", name: "board_title", widget: "string"}
+          - label: "Predsjedništvo i tijela"
+            name: "board"
+            widget: "list"
+            fields:
+              - {label: "Funkcija", name: "role", widget: "string"}
+              - {label: "Ime i prezime", name: "name", widget: "string"}
+          - {label: "Adresa", name: "address", widget: "string"}
+          - {label: "E-mail", name: "email", widget: "string"}
+          - {label: "Telefon", name: "phone", widget: "string", required: false}
+          - {label: "Radno vrijeme", name: "working_hours", widget: "string", required: false}
+          - {label: "Facebook", name: "facebook", widget: "string", required: false}
+          - {label: "Instagram", name: "instagram", widget: "string", required: false}
+          - {label: "Kontakt – oznaka", name: "contact_eyebrow", widget: "string"}
+          - {label: "Kontakt – naslov", name: "contact_title", widget: "string"}
+          - {label: "Kontakt – uvodni tekst", name: "contact_intro", widget: "text"}
+          - {label: "Tekst podnožja", name: "footer_text", widget: "text"}
+          - label: "Boje stranice"
+            name: "colors"
+            widget: "object"
+            fields:
+              - {label: "Tamno plava", name: "navy", widget: "color"}
+              - {label: "Plava", name: "blue", widget: "color"}
+              - {label: "Crvena", name: "red", widget: "color"}
+              - {label: "Zlatna", name: "gold", widget: "color"}
+          - {label: "SEO naslov", name: "seo_title", widget: "string"}
+          - {label: "SEO opis", name: "seo_description", widget: "text"}
+          - label: "Nazivi izbornika"
+            name: "nav"
+            widget: "object"
+            fields:
+              - {label: "Početna", name: "home", widget: "string"}
+              - {label: "O udruzi", name: "about", widget: "string"}
+              - {label: "Ciljevi", name: "goals", widget: "string"}
+              - {label: "Novosti", name: "news", widget: "string"}
+              - {label: "Dokumenti", name: "documents", widget: "string"}
+              - {label: "Galerija", name: "gallery", widget: "string"}
+              - {label: "Predsjedništvo", name: "board", widget: "string"}
+              - {label: "Kontakt", name: "contact", widget: "string"}
+          - label: "Uključi / isključi sekcije"
+            name: "visible"
+            widget: "object"
+            fields:
+              - {label: "O udruzi", name: "about", widget: "boolean", default: true}
+              - {label: "Ciljevi", name: "goals", widget: "boolean", default: true}
+              - {label: "Novosti", name: "news", widget: "boolean", default: true}
+              - {label: "Dokumenti", name: "documents", widget: "boolean", default: true}
+              - {label: "Galerija", name: "gallery", widget: "boolean", default: true}
+              - {label: "Predsjedništvo", name: "board", widget: "boolean", default: true}
+              - {label: "Kontakt", name: "contact", widget: "boolean", default: true}
       - name: "novosti"
         label: "Novosti"
         file: "content/news.json"
@@ -22,7 +111,7 @@ collections:
               - {label: "Kategorija", name: "category", widget: "string", required: false}
               - {label: "Fotografija", name: "image", widget: "image", required: false}
               - {label: "Kratki tekst", name: "excerpt", widget: "text"}
-              - {label: "Sadržaj", name: "body", widget: "markdown", required: false}
+              - {label: "Sadržaj", name: "body", widget: "richtext", required: false}
       - name: "galerija"
         label: "Galerija"
         file: "content/gallery.json"
@@ -43,4 +132,4 @@ collections:
             fields:
               - {label: "Naziv", name: "title", widget: "string"}
               - {label: "Opis", name: "description", widget: "text", required: false}
-              - {label: "PDF", name: "file", widget: "file"}
+              - {label: "PDF / datoteka", name: "file", widget: "file"}
