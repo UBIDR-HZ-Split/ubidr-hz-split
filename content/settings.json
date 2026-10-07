@@ -1,32 +1,4 @@
 {
-  "site_name": "UBIDR-HŽ SPLIT",
-  "legal_name": "UDRUGA BRANITELJA I INVALIDA DOMOVINSKOG RATA HRVATSKIH ŽELJEZNICA",
-  "branch_name": "Podružnica Split",
-  "tagline": "Čast • Ponos • Zajedništvo • Željeznica",
-  "logo": "ubidr-logo.jpg",
-  "hero_image": "hero.jpg",
-  "hero_label": "Podružnica Split",
-  "hero_title": "UBIDR-HŽ SPLIT",
-  "hero_text": "Udruga branitelja i invalida Domovinskog rata Hrvatskih željeznica",
-  "about_eyebrow": "Dobro došli",
-  "about_title": "UBIDR-HŽ – Podružnica Split",
-  "about_text": "Dobro došli na web-stranicu Udruge branitelja i invalida Domovinskog rata Hrvatskih željeznica – Podružnice Split. Ovdje ćemo objavljivati novosti, obavijesti, događanja, fotografije i informacije važne za naše članove.",
-  "about_cards": [
-    {
-      "title": "O udruzi",
-      "text": "Informacije o radu, djelovanju i povijesti podružnice."
-    },
-    {
-      "title": "Obavijesti",
-      "text": "Važne informacije za članove i najave događanja."
-    },
-    {
-      "title": "Naše aktivnosti",
-      "text": "Obilježavanja, susreti, druženja i druge aktivnosti."
-    }
-  ],
-  "goals_eyebrow": "Svrha djelovanja",
-  "goals_title": "Ciljevi i aktivnosti",
   "goals": [
     {
       "icon": "⚖",
@@ -49,23 +21,28 @@
       "text": "Čuvanje zajedništva i tradicije željezničara branitelja."
     }
   ],
-  "news_eyebrow": "Aktualno",
-  "news_title": "Najnovije novosti",
+  "working_hours": "",
   "documents_eyebrow": "Dokumentacija",
-  "documents_title": "Dokumenti i obrasci",
-  "gallery_eyebrow": "Uspomene",
-  "gallery_title": "Foto galerija",
-  "gallery_intro": "Ovdje ćemo dodavati fotografije s aktivnosti podružnice.",
-  "board_eyebrow": "Uprava podružnice",
-  "board_title": "Predsjedništvo i tijela udruge",
+  "site_name": "UBIDR-HŽ SPLIT",
+  "nav": {
+    "home": "Početna",
+    "about": "O udruzi",
+    "goals": "Ciljevi i aktivnosti",
+    "news": "Novosti",
+    "documents": "Dokumenti",
+    "gallery": "Galerija",
+    "board": "Predsjedništvo",
+    "contact": "Kontakt"
+  },
+  "facebook": "https://www.facebook.com/profile.php?id=61595213338350",
   "board": [
     {
       "role": "Predsjednik",
-      "name": "Branko Radačić"
+      "name": "Mirko Meljančić 095…"
     },
     {
       "role": "Tajnik",
-      "name": "Nikša Antićević"
+      "name": "Aa"
     },
     {
       "role": "Zamjenik predsjednika",
@@ -100,34 +77,41 @@
       "name": "Ivica Pirija"
     }
   ],
-  "address": "21000 Split, Hrvatska",
-  "email": "ubidr.hzsplit@gmail.com",
-  "phone": "",
-  "working_hours": "",
-  "facebook": "https://www.facebook.com/profile.php?id=61595213338350",
-  "instagram": "https://www.instagram.com/ubidrhzsplit?stkn=MWVja28xeXY0aXJjbw==",
+  "about_title": "UBIDR-HŽ – Podružnica Split",
+  "branch_name": "Podružnica Split",
+  "goals_eyebrow": "Svrha djelovanja",
   "contact_eyebrow": "Javite nam se",
-  "contact_title": "Kontakt",
+  "logo": "ubidr-logo.jpg",
+  "gallery_title": "Foto galerija",
+  "news_title": "Najnovije novosti",
   "contact_intro": "Pratite novosti i aktivnosti podružnice te nam se javite za informacije.",
-  "footer_text": "Udruga branitelja i invalida Domovinskog rata Hrvatskih željeznica – Podružnica Split.",
+  "phone": "",
+  "tagline": "Čast • Ponos • Zajedništvo • Željeznica",
+  "hero_label": "Podružnica Split",
   "colors": {
     "navy": "#102d46",
     "blue": "#1d557d",
     "red": "#b51f2a",
     "gold": "#c9a04a"
   },
-  "seo_title": "UBIDR-HŽ – Podružnica Split | Udruga branitelja i invalida Domovinskog rata Hrvatskih željeznica",
-  "seo_description": "UBIDR-HŽ – Udruga branitelja i invalida Domovinskog rata Hrvatskih željeznica, Podružnica Split. Novosti, aktivnosti, dokumenti, galerija i kontakt.",
-  "nav": {
-    "home": "Početna",
-    "about": "O udruzi",
-    "goals": "Ciljevi i aktivnosti",
-    "news": "Novosti",
-    "documents": "Dokumenti",
-    "gallery": "Galerija",
-    "board": "Predsjedništvo",
-    "contact": "Kontakt"
-  },
+  "board_eyebrow": "Uprava podružnice",
+  "about_cards": [
+    {
+      "title": "O udruzi",
+      "text": "Informacije o radu, djelovanju i povijesti podružnice."
+    },
+    {
+      "title": "Obavijesti",
+      "text": "Važne informacije za članove i najave događanja."
+    },
+    {
+      "title": "Naše aktivnosti",
+      "text": "Obilježavanja, susreti, druženja i druge aktivnosti."
+    }
+  ],
+  "legal_name": "UDRUGA BRANITELJA I INVALIDA DOMOVINSKOG RATA HRVATSKIH ŽELJEZNICA",
+  "footer_text": "Udruga branitelja i invalida Domovinskog rata Hrvatskih željeznica – Podružnica Split.",
+  "documents_title": "Dokumenti i obrasci",
   "visible": {
     "about": true,
     "goals": true,
@@ -136,5 +120,21 @@
     "gallery": true,
     "board": true,
     "contact": true
-  }
+  },
+  "hero_text": "Udruga branitelja i invalida Domovinskog rata Hrvatskih željeznica",
+  "instagram": "https://www.instagram.com/ubidrhzsplit?stkn=MWVja28xeXY0aXJjbw==",
+  "hero_title": "UBIDR-HŽ SPLIT",
+  "address": "21000 Split, Hrvatska",
+  "hero_image": "hero.jpg",
+  "seo_title": "UBIDR-HŽ – Podružnica Split | Udruga branitelja i invalida Domovinskog rata Hrvatskih željeznica",
+  "about_eyebrow": "Dobro došli",
+  "goals_title": "Ciljevi i aktivnosti",
+  "contact_title": "Kontakt",
+  "seo_description": "UBIDR-HŽ – Udruga branitelja i invalida Domovinskog rata Hrvatskih željeznica, Podružnica Split. Novosti, aktivnosti, dokumenti, galerija i kontakt.",
+  "email": "ubidr.hzsplit@gmail.com",
+  "gallery_eyebrow": "Uspomene",
+  "news_eyebrow": "Aktualno",
+  "about_text": "Dobro došli na web-stranicu Udruge branitelja i invalida Domovinskog rata Hrvatskih željeznica – Podružnice Split. Ovdje ćemo objavljivati novosti, obavijesti, događanja, fotografije i informacije važne za naše članove.",
+  "gallery_intro": "Ovdje ćemo dodavati fotografije s aktivnosti podružnice.",
+  "board_title": "Predsjedništvo i tijela udruge"
 }
