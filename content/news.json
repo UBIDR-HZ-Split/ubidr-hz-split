@@ -7,6 +7,12 @@
       "image": "hero.jpg",
       "excerpt": "Ovdje ćemo objavljivati novosti, obavijesti i aktivnosti podružnice.",
       "body": "Ovo je početna objava."
+    },
+    {
+      "body": "",
+      "title": "Proba",
+      "date": "2026-10-07T22:37:00.000+02:00",
+      "excerpt": "Jams"
     }
   ]
 }
