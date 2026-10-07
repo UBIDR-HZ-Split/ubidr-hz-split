@@ -1,0 +1,8 @@
+async function getJSON(p){const r=await fetch(p+"?v="+Date.now());return r.json()}
+function esc(s=""){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+document.addEventListener("DOMContentLoaded",async()=>{try{
+const n=await getJSON("content/news.json"),g=document.getElementById("news-grid");
+if(g)g.innerHTML=(n.items||[]).map(x=>`<article class="bg-slate-50 rounded-2xl overflow-hidden border border-slate-200 flex flex-col hover:shadow-lg transition">${x.image?`<div class="h-48 bg-slate-800"><img src="${esc(x.image)}" alt="${esc(x.title)}" class="w-full h-full object-cover"></div>`:""}<div class="p-6 flex-grow"><div class="text-xs text-slate-400 mb-2">${esc(x.date||"")}</div>${x.category?`<span class="inline-block bg-croRed text-white text-xs font-bold px-3 py-1 rounded-full mb-3">${esc(x.category)}</span>`:""}<h3 class="text-lg font-bold text-slate-900 mb-2">${esc(x.title)}</h3><p class="text-slate-600 text-sm">${esc(x.excerpt||"")}</p></div></article>`).join("");
+const a=await getJSON("content/gallery.json"),gg=document.getElementById("gallery-grid");
+if(gg)gg.innerHTML=(a.items||[]).map(x=>`<div class="group relative rounded-xl overflow-hidden shadow border border-slate-200 aspect-square"><img src="${esc(x.image)}" alt="${esc(x.title)}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300"><div class="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 transition flex items-end p-3"><span class="text-white text-xs font-semibold">${esc(x.title)}</span></div></div>`).join("");
+}catch(e){console.warn(e)}})

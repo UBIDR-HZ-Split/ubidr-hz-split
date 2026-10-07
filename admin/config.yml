@@ -1,0 +1,45 @@
+backend:
+  name: git-gateway
+  branch: main
+media_folder: "uploads"
+public_folder: "/uploads"
+locale: "hr"
+collections:
+  - name: "sadrzaj"
+    label: "Sadržaj"
+    files:
+      - name: "novosti"
+        label: "Novosti"
+        file: "content/news.json"
+        fields:
+          - label: "Objave"
+            name: "items"
+            widget: "list"
+            fields:
+              - {label: "Naslov", name: "title", widget: "string"}
+              - {label: "Datum", name: "date", widget: "datetime"}
+              - {label: "Kategorija", name: "category", widget: "string", required: false}
+              - {label: "Fotografija", name: "image", widget: "image", required: false}
+              - {label: "Kratki tekst", name: "excerpt", widget: "text"}
+              - {label: "Sadržaj", name: "body", widget: "markdown", required: false}
+      - name: "galerija"
+        label: "Galerija"
+        file: "content/gallery.json"
+        fields:
+          - label: "Fotografije"
+            name: "items"
+            widget: "list"
+            fields:
+              - {label: "Naziv", name: "title", widget: "string"}
+              - {label: "Fotografija", name: "image", widget: "image"}
+      - name: "dokumenti"
+        label: "Dokumenti"
+        file: "content/documents.json"
+        fields:
+          - label: "Dokumenti"
+            name: "items"
+            widget: "list"
+            fields:
+              - {label: "Naziv", name: "title", widget: "string"}
+              - {label: "Opis", name: "description", widget: "text", required: false}
+              - {label: "PDF", name: "file", widget: "file"}
