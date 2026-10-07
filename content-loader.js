@@ -1,4 +1,4 @@
-async function getJSON(p){const r=await fetch(p+"?v="+Date.now());if(!r.ok)throw new Error(p+" "+r.status);return r.json()}
+async function getJSON(p){const r=await fetch("./"+p+"?v="+Date.now(),{cache:"no-store"});if(!r.ok)throw new Error(p+" "+r.status);return r.json()}
 function esc(s=""){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
 function link(s=""){return esc(s)}
 function setText(sel,v){const e=document.querySelector(sel);if(e&&v!==undefined)e.textContent=v}
@@ -21,7 +21,7 @@ setText('#ciljevi .eyebrow',s.goals_eyebrow);setText('#ciljevi h2',s.goals_title
 setText('#novosti .eyebrow',s.news_eyebrow);setText('#novosti h2',s.news_title);
 setText('#dokumenti .eyebrow',s.documents_eyebrow);setText('#dokumenti h2',s.documents_title);
 setText('#galerija .eyebrow',s.gallery_eyebrow);setText('#galerija h2',s.gallery_title);setText('#galerija .lead',s.gallery_intro);
-setText('#predsjednistvo .eyebrow',s.board_eyebrow);setText('#predsjednistvo h2',s.board_title);const board=document.querySelector('#predsjednistvo .board');if(board)board.innerHTML=(s.board||[]).map(x=>`<div class="person"><strong>${esc(x.role)}</strong><span>${esc(x.name)}</span></div>`).join('');
+setText('#predsjednistvo .eyebrow',s.board_eyebrow);setText('#predsjednistvo h2',s.board_title);const board=document.querySelector("#predsjednistvo .board");if(board){board.innerHTML=(Array.isArray(s.board)?s.board:[]).map(x=>`<div class="person"><strong>${esc(x.role||"")}</strong><span>${esc(x.name||"")}</span></div>`).join("");}
 setText('#kontakt .eyebrow',s.contact_eyebrow);setText('#kontakt h2',s.contact_title);setText('#kontakt .contact-box p:nth-of-type(2)',s.address||'');const ps=document.querySelectorAll('#kontakt .contact-box p');if(ps.length){let info=ps[1];if(info){info.innerHTML=`<b>${esc(s.address||'')}</b>`;}}
 const emailP=document.querySelector('#kontakt .contact-box p:nth-of-type(3)');if(emailP)emailP.innerHTML=`<b>E-mail:</b> ${esc(s.email||'')}`;
 const mailBtn=document.querySelector('#kontakt .contact-box .btn');if(mailBtn){mailBtn.href=s.email?'mailto:'+s.email:'#';}
