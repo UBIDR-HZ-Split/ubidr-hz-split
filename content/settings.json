@@ -38,39 +38,35 @@
   "board": [
     {
       "role": "Predsjednik",
-      "name": "Mirko Meljančić "
+      "name": "Mirko Meljančić, 095/390-4454"
     },
     {
       "role": "Tajnik",
-      "name": "Aa"
+      "name": "Zoran Matijaš "
     },
     {
       "role": "Zamjenik predsjednika",
-      "name": "Mladen Milić"
+      "name": "Mladen Milić, 098/882-141"
     },
     {
       "role": "Potpredsjednik",
-      "name": "Vladimir Radačić"
+      "name": "Ante Brnada "
     },
     {
       "role": "Potpredsjednik",
-      "name": "Ivan Parat"
+      "name": "Vladimir Radačić "
     },
     {
       "role": "Potpredsjednik",
-      "name": "Ivica Mišković"
+      "name": "Mladen Mišković"
+    },
+    {
+      "role": "Potpredsjednik",
+      "name": "Josip Močić"
     },
     {
       "role": "Blagajnik",
-      "name": "Ivan Škrapić"
-    },
-    {
-      "role": "Supotpisnik",
-      "name": "Vladimir Radačić"
-    },
-    {
-      "role": "Predsjednik Nadzornog odbora",
-      "name": "Ivo Hekman"
+      "name": "Mladen Milić"
     },
     {
       "role": "Predsjednik Suda časti",
