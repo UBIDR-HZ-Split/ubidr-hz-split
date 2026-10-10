@@ -124,7 +124,7 @@ collections:
             fields:
               - {label: "Naziv albuma", name: "title", widget: "string"}
               - {label: "Naslovna fotografija", name: "image", widget: "image"}
-              - label: "Fotografije albuma"
+              - label: "Fotografije u albumu"
                 name: "images"
                 widget: "list"
                 field:
