@@ -32,83 +32,134 @@ Object.entries(s.visible||{}).forEach(([k,v])=>setVisible(k==='about'?'onama':k=
 const n=await getJSON("content/news.json"),g=document.querySelector('#novosti .news');
 if(g)g.innerHTML=(n.items||[]).map((x,i)=>`<article class="news-card" style="cursor:pointer" onclick="openNews(${i})">${x.image?`<div class="news-img"><img src="${esc(asset(x.image))}" alt="${esc(x.title)}" style="width:100%;height:100%;object-fit:cover"></div>`:`<div class="news-img">${esc(x.category||'NOVOST')}</div>`}<div class="news-body"><div class="news-date">${esc(x.date ? new Date(x.date).toLocaleDateString('hr-HR') : '')}</div><h3>${esc(x.title||'')}</h3><p>${esc(x.excerpt||x.description||x.text||'')}</p></div></article>`).join('');
 const a=await getJSON("content/gallery.json"),gg=document.querySelector('#galerija .gallery');
-if(gg)gg.innerHTML=(a.items||[]).map(x=>`<div class="gallery-box"><img src="${esc(asset(x.image))}" alt="${esc(x.title)}" title="Klikni za uvećanje" onclick="window.open(this.src,'_blank')" style="width:100%;height:100%;object-fit:cover;border-radius:9px;cursor:zoom-in"><span style="position:absolute;display:none">${esc(x.title)}</span></div>`).join('');
+if(gg)gg.innerHTML=(a.items||[]).map((x,i)=>{
+  // Podržava nove albume (cover + images) i stare stavke (image).
+  const cover=x.cover||x.image||(Array.isArray(x.images)?x.images[0]:"")||"";
+  const count=Array.isArray(x.images)&&x.images.length?x.images.length:(x.image?1:0);
+  return `<article class="gallery-box" role="button" tabindex="0"
+    onclick="openGalleryAlbum(${i})"
+    onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openGalleryAlbum(${i})}"
+    style="position:relative;cursor:pointer;overflow:hidden">
+    ${cover?`<img src="${esc(asset(cover))}" alt="${esc(x.title||'Album')}" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:9px">`:""}
+    <div style="padding:10px 2px">
+      <strong>${esc(x.title||"Album")}</strong>
+      <div style="font-size:13px;opacity:.75">${count} ${count===1?"fotografija":"fotografija"}</div>
+    </div>
+  </article>`;
+}).join('');
 const d=await getJSON("content/documents.json"),dg=document.querySelector('#dokumenti .docs');if(dg)dg.innerHTML=(d.items||[]).map(x=>`<div class="doc"><h3>${esc(x.title)}</h3><p>${esc(x.description||'')}</p>${x.file?`<a class="btn" href="${esc(asset(x.file))}" target="_blank" rel="noopener">Preuzmi</a>`:''}</div>`).join('');
 }catch(e){console.warn('UBIDR content loader:',e)}})();
 
-async function openNews(i){
-  try {
-    const n = await getJSON("content/news.json");
-    const x = n.items[i];
-    if (!x) return;
+function formatHrDate(value){
+  if(!value) return "";
+  // Za ISO datum koristimo lokalni datum kako se ne bi pomaknuo dan zbog vremenske zone.
+  const m=String(value).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(m) return `${Number(m[3])}. ${Number(m[2])}. ${m[1]}.`;
+  const d=new Date(value);
+  return Number.isNaN(d.getTime()) ? esc(value) : d.toLocaleDateString("hr-HR");
+}
 
-    document.getElementById("news-modal")?.remove();
+function closeContentModal(){
+  document.getElementById("news-modal")?.remove();
+  document.getElementById("gallery-modal")?.remove();
+}
 
-    const modal = document.createElement("div");
-    modal.id = "news-modal";
-    modal.style.cssText = `
-      position:fixed; inset:0; z-index:99999;
-      background:rgba(0,0,0,.78);
-      display:flex; align-items:center; justify-content:center;
-      padding:16px; box-sizing:border-box;
-    `;
-
-    const photos = [x.image, ...(Array.isArray(x.images) ? x.images : [])]
-      .filter(Boolean);
-
-    modal.innerHTML = `
-      <div style="background:#fff;color:#222;max-width:850px;width:100%;
-        max-height:90vh;overflow:auto;border-radius:12px;padding:22px;
-        box-sizing:border-box">
-        <button id="news-close" style="float:right;background:#090A73;
-          color:white;border:0;border-radius:6px;padding:10px 15px;
-          cursor:pointer">✕ Zatvori</button>
-        <div style="clear:both"></div>
-        <p style="color:#80621c">
-          ${esc(x.date ? new Date(x.date).toLocaleDateString('hr-HR') : '')}
-        </p>
-        <h2>${esc(x.title || '')}</h2>
-        <div style="font-size:16px;line-height:1.8;white-space:pre-wrap">
-          ${esc(x.body || x.content || x.description || x.text || x.excerpt || '')}
-        </div>
-        <div id="news-photos" style="margin-top:20px"></div>
-      </div>`;
-
-    document.body.appendChild(modal);
-
-    const photosBox = modal.querySelector("#news-photos");
-    if (photos.length) {
-      let current = 0;
-
-      function showPhoto() {
-        photosBox.innerHTML = `
-          <img src="${esc(asset(photos[current]))}"
-            alt="${esc(x.title || '')}"
-            style="display:block;width:100%;max-height:55vh;object-fit:contain">
-          <div style="display:flex;justify-content:space-between;
-            align-items:center;margin-top:10px;gap:12px">
-            <button id="photo-prev" ${current===0?'disabled':''}>‹ Prethodna</button>
-            <span>${current+1} / ${photos.length}</span>
-            <button id="photo-next" ${current===photos.length-1?'disabled':''}>Sljedeća ›</button>
-          </div>`;
-
-        photosBox.querySelector("#photo-prev").onclick = () => {
-          if (current > 0) { current--; showPhoto(); }
-        };
-        photosBox.querySelector("#photo-next").onclick = () => {
-          if (current < photos.length - 1) { current++; showPhoto(); }
-        };
-      }
-
-      showPhoto();
-    }
-
-    modal.querySelector("#news-close").onclick = () => modal.remove();
-    modal.onclick = e => {
-      if (e.target === modal) modal.remove();
-    };
-  } catch (e) {
-    console.error(e);
-    alert("Novost se ne može otvoriti.");
+function showPhotoViewer({modalId,title,photos,startIndex=0}){
+  if(!Array.isArray(photos)||!photos.length) return;
+  let current=Math.max(0,Math.min(startIndex,photos.length-1));
+  let viewer=document.getElementById("photo-viewer");
+  if(viewer) viewer.remove();
+  viewer=document.createElement("div");
+  viewer.id="photo-viewer";
+  viewer.style.cssText="position:fixed;inset:0;z-index:100002;background:rgba(0,0,0,.94);display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box";
+  viewer.innerHTML=`
+    <button type="button" id="viewer-close" aria-label="Zatvori" style="position:absolute;right:18px;top:14px;background:#fff;color:#111;border:0;border-radius:6px;padding:10px 14px;cursor:pointer">✕ Zatvori</button>
+    <button type="button" id="viewer-prev" aria-label="Prethodna fotografija" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:30px;padding:10px;background:#fff;color:#111;border:0;border-radius:8px;cursor:pointer">‹</button>
+    <figure style="margin:45px 48px 20px;max-width:90vw;max-height:85vh;text-align:center">
+      <img id="viewer-img" alt="" style="display:block;max-width:100%;max-height:75vh;object-fit:contain;margin:auto">
+      <figcaption id="viewer-caption" style="color:white;margin-top:10px"></figcaption>
+    </figure>
+    <button type="button" id="viewer-next" aria-label="Sljedeća fotografija" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:30px;padding:10px;background:#fff;color:#111;border:0;border-radius:8px;cursor:pointer">›</button>`;
+  document.body.appendChild(viewer);
+  function render(){
+    const img=viewer.querySelector("#viewer-img");
+    img.src=asset(photos[current]);
+    img.alt=title||"Fotografija";
+    viewer.querySelector("#viewer-caption").textContent=`${title||"Fotografija"} — ${current+1} / ${photos.length}`;
+    viewer.querySelector("#viewer-prev").disabled=current===0;
+    viewer.querySelector("#viewer-next").disabled=current===photos.length-1;
+    viewer.querySelector("#viewer-prev").style.opacity=current===0?".35":"1";
+    viewer.querySelector("#viewer-next").style.opacity=current===photos.length-1?".35":"1";
   }
+  viewer.querySelector("#viewer-prev").onclick=()=>{if(current>0){current--;render();}};
+  viewer.querySelector("#viewer-next").onclick=()=>{if(current<photos.length-1){current++;render();}};
+  viewer.querySelector("#viewer-close").onclick=()=>viewer.remove();
+  viewer.onclick=e=>{if(e.target===viewer)viewer.remove();};
+  const onKey=e=>{
+    if(!document.getElementById("photo-viewer")){document.removeEventListener("keydown",onKey);return;}
+    if(e.key==="Escape") viewer.remove();
+    if(e.key==="ArrowLeft"&&current>0){current--;render();}
+    if(e.key==="ArrowRight"&&current<photos.length-1){current++;render();}
+  };
+  document.addEventListener("keydown",onKey);
+  render();
+}
+
+async function openNews(i){
+  try{
+    const n=await getJSON("content/news.json");
+    const x=(n.items||[])[i];
+    if(!x)return;
+    document.getElementById("news-modal")?.remove();
+    document.getElementById("photo-viewer")?.remove();
+    const photos=[x.image,...(Array.isArray(x.images)?x.images:[])].filter(Boolean)
+      .filter((p,index,arr)=>arr.indexOf(p)===index);
+    const modal=document.createElement("div");
+    modal.id="news-modal";
+    modal.style.cssText="position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box";
+    modal.innerHTML=`
+      <article style="background:#fff;color:#222;max-width:850px;width:100%;max-height:90vh;overflow:auto;border-radius:12px;padding:22px;box-sizing:border-box">
+        <button type="button" id="news-close" style="float:right;background:#090A73;color:white;border:0;border-radius:6px;padding:10px 15px;cursor:pointer">✕ Zatvori</button>
+        <div style="clear:both"></div>
+        <p style="color:#80621c">${formatHrDate(x.date)}</p>
+        <h2>${esc(x.title||"")}</h2>
+        <div style="font-size:16px;line-height:1.8;white-space:pre-wrap">${esc(x.body||x.content||x.description||x.text||x.excerpt||"")}</div>
+        <div id="news-photos" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-top:20px"></div>
+      </article>`;
+    document.body.appendChild(modal);
+    const photosBox=modal.querySelector("#news-photos");
+    photosBox.innerHTML=photos.map((p,j)=>`<button type="button" data-photo-index="${j}" style="border:0;padding:0;background:transparent;cursor:zoom-in"><img src="${esc(asset(p))}" alt="${esc(x.title||"Fotografija")} ${j+1}" loading="lazy" style="width:100%;height:120px;object-fit:cover;border-radius:7px;display:block"></button>`).join("");
+    photosBox.querySelectorAll("[data-photo-index]").forEach(btn=>btn.onclick=()=>showPhotoViewer({title:x.title,photos,startIndex:Number(btn.dataset.photoIndex)}));
+    modal.querySelector("#news-close").onclick=()=>modal.remove();
+    modal.onclick=e=>{if(e.target===modal)modal.remove();};
+  }catch(e){console.error(e);alert("Novost se ne može otvoriti.");}
+}
+
+async function openGalleryAlbum(i){
+  try{
+    const a=await getJSON("content/gallery.json");
+    const x=(a.items||[])[i];
+    if(!x)return;
+    document.getElementById("gallery-modal")?.remove();
+    document.getElementById("photo-viewer")?.remove();
+    // Novi format: images[]. Stariji format: samo image.
+    const photos=(Array.isArray(x.images)&&x.images.length?x.images:[x.image||x.cover]).filter(Boolean);
+    const modal=document.createElement("div");
+    modal.id="gallery-modal";
+    modal.style.cssText="position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box";
+    modal.innerHTML=`
+      <section style="background:#fff;color:#222;max-width:1000px;width:100%;max-height:90vh;overflow:auto;border-radius:12px;padding:20px;box-sizing:border-box">
+        <button type="button" id="gallery-close" style="float:right;background:#090A73;color:white;border:0;border-radius:6px;padding:10px 15px;cursor:pointer">✕ Zatvori album</button>
+        <div style="clear:both"></div>
+        <h2 style="margin-top:8px">${esc(x.title||"Galerija")}</h2>
+        <p>${photos.length} fotografija</p>
+        <div id="gallery-album-photos" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px"></div>
+      </section>`;
+    document.body.appendChild(modal);
+    const box=modal.querySelector("#gallery-album-photos");
+    box.innerHTML=photos.map((p,j)=>`<button type="button" data-photo-index="${j}" style="border:0;padding:0;background:transparent;cursor:zoom-in"><img src="${esc(asset(p))}" alt="${esc(x.title||"Galerija")} ${j+1}" loading="lazy" style="width:100%;height:135px;object-fit:cover;border-radius:7px;display:block"></button>`).join("");
+    box.querySelectorAll("[data-photo-index]").forEach(btn=>btn.onclick=()=>showPhotoViewer({title:x.title,photos,startIndex:Number(btn.dataset.photoIndex)}));
+    modal.querySelector("#gallery-close").onclick=()=>modal.remove();
+    modal.onclick=e=>{if(e.target===modal)modal.remove();};
+  }catch(e){console.error(e);alert("Album se ne može otvoriti.");}
 }
