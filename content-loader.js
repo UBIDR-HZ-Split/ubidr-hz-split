@@ -31,22 +31,37 @@ const navMap={home:'#pocetna',about:'#onama',goals:'#ciljevi',news:'#novosti',do
 Object.entries(s.visible||{}).forEach(([k,v])=>setVisible(k==='about'?'onama':k==='goals'?'ciljevi':k==='news'?'novosti':k==='documents'?'dokumenti':k==='gallery'?'galerija':k==='board'?'predsjednistvo':k==='contact'?'kontakt':k,v));
 const n=await getJSON("content/news.json"),g=document.querySelector('#novosti .news');
 if(g)g.innerHTML=(n.items||[]).map((x,i)=>`<article class="news-card" style="cursor:pointer" onclick="openNews(${i})">${x.image?`<div class="news-img"><img src="${esc(asset(x.image))}" alt="${esc(x.title)}" style="width:100%;height:100%;object-fit:cover"></div>`:`<div class="news-img">${esc(x.category||'NOVOST')}</div>`}<div class="news-body"><div class="news-date">${esc(x.date ? new Date(x.date).toLocaleDateString('hr-HR') : '')}</div><h3>${esc(x.title||'')}</h3><p>${esc(x.excerpt||x.description||x.text||'')}</p></div></article>`).join('');
-const a=await getJSON("content/gallery.json"),gg=document.querySelector('#galerija .gallery');
-if(gg)gg.innerHTML=(a.items||[]).map((x,i)=>{
-  // Podržava nove albume (cover + images) i stare stavke (image).
-  const cover=x.cover||x.image||(Array.isArray(x.images)?x.images[0]:"")||"";
-  const count=Array.isArray(x.images)&&x.images.length?x.images.length:(x.image?1:0);
-  return `<article class="gallery-box" role="button" tabindex="0"
-    onclick="openGalleryAlbum(${i})"
-    onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openGalleryAlbum(${i})}"
-    style="position:relative;cursor:pointer;overflow:hidden">
-    ${cover?`<img src="${esc(asset(cover))}" alt="${esc(x.title||'Album')}" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:9px">`:""}
-    <div style="padding:10px 2px">
-      <strong>${esc(x.title||"Album")}</strong>
-      <div style="font-size:13px;opacity:.75">${count} ${count===1?"fotografija":"fotografija"}</div>
-    </div>
-  </article>`;
-}).join('');
+const a = await getJSON("content/gallery.json");
+const gg = document.querySelector("#galerija .gallery");
+
+if (gg) {
+  gg.innerHTML = (a.items || []).map((x, i) => {
+    const cover = x.image || x.cover ||
+      (Array.isArray(x.images) ? x.images[0] : "");
+    const count = Array.isArray(x.images)
+      ? x.images.length
+      : (x.image ? 1 : 0);
+
+    return `
+      <article class="gallery-box"
+        role="button"
+        tabindex="0"
+        onclick="openGalleryAlbum(${i})"
+        onkeydown="if(event.key==='Enter'){openGalleryAlbum(${i})}"
+        style="cursor:pointer;overflow:hidden">
+        ${cover ? `
+          <img src="${esc(asset(cover))}"
+            alt="${esc(x.title || "Album")}"
+            loading="lazy"
+            style="width:100%;height:180px;object-fit:cover;border-radius:9px">
+        ` : ""}
+        <div style="padding:10px">
+          <strong>${esc(x.title || "Album")}</strong>
+          <div>${count} fotografija</div>
+        </div>
+      </article>`;
+  }).join("");
+}
 const d=await getJSON("content/documents.json"),dg=document.querySelector('#dokumenti .docs');if(dg)dg.innerHTML=(d.items||[]).map(x=>`<div class="doc"><h3>${esc(x.title)}</h3><p>${esc(x.description||'')}</p>${x.file?`<a class="btn" href="${esc(asset(x.file))}" target="_blank" rel="noopener">Preuzmi</a>`:''}</div>`).join('');
 }catch(e){console.warn('UBIDR content loader:',e)}})();
 
