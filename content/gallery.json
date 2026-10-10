@@ -2,7 +2,10 @@
   "items": [
     {
       "title": "UBIDR-HŽ Podružnica Split",
-      "image": "hero.jpg"
+      "image": "hero.jpg",
+      "images": [
+        "uploads/screenshot_22.jpg"
+      ]
     }
   ]
 }
