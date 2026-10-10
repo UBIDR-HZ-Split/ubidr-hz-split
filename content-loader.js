@@ -69,7 +69,7 @@ async function openNews(i){
         </p>
         <h2>${esc(x.title || '')}</h2>
         <div style="font-size:16px;line-height:1.8;white-space:pre-wrap">
-          ${esc(x.body || x.description || x.text || x.excerpt || '')}
+          ${esc(x.body || x.content || x.description || x.text || x.excerpt || '')}
         </div>
         <div id="news-photos" style="margin-top:20px"></div>
       </div>`;
