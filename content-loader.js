@@ -29,25 +29,27 @@ const social=document.querySelectorAll('#kontakt .contact-box')[1];if(social){se
 const ft=document.querySelector('footer .footer');if(ft){setText('footer .footer > div:first-child p',s.footer_text);setHTML('footer .footer > div:last-child p:first-of-type',`${esc((s.address||'').replace(/\\n/g,' ').replace(/\\\\n/g,' '))}${s.email?'<br>'+esc(s.email):''}`);const fb=ft.querySelector('a[href*="facebook"]');const ig=ft.querySelector('a[href*="instagram"]');if(fb)fb.href=s.facebook||'#';if(ig)ig.href=s.instagram||'#';}
 const navMap={home:'#pocetna',about:'#onama',goals:'#ciljevi',news:'#novosti',documents:'#dokumenti',gallery:'#galerija',board:'#predsjednistvo',contact:'#kontakt'};document.querySelectorAll('.menu a').forEach(a=>{const href=a.getAttribute('href');const k=Object.keys(navMap).find(k=>navMap[k]===href);if(k&&s.nav?.[k])a.textContent=s.nav[k];});
 Object.entries(s.visible||{}).forEach(([k,v])=>setVisible(k==='about'?'onama':k==='goals'?'ciljevi':k==='news'?'novosti':k==='documents'?'dokumenti':k==='gallery'?'galerija':k==='board'?'predsjednistvo':k==='contact'?'kontakt':k,v));
-const n=await getJSON("content/news.json"),g=document.querySelector('#novosti .news');
-if(g)g.innerHTML=(n.items||[]).map((x,i)=>`<article class="news-card" style="cursor:pointer" onclick="openNews(${i})">${x.image?`<div class="news-img"><img src="${esc(asset(x.image))}" alt="${esc(x.title)}" style="width:100%;height:100%;object-fit:cover"></div>`:`<div class="news-img">${esc(x.category||'NOVOST')}</div>`}<div class="news-body"><div class="news-date">${esc(x.date ? new Date(x.date).toLocaleDateString('hr-HR') : '')}</div><h3>${esc(x.title||'')}</h3><p>${esc(x.excerpt||x.description||x.text||'')}</p></div></article>`).join('');
 const a = await getJSON("content/gallery.json");
 const gg = document.querySelector("#galerija .gallery");
 
 if (gg) {
   gg.innerHTML = (a.items || []).map((x, i) => {
-    const cover = x.image || x.cover ||
-      (Array.isArray(x.images) ? x.images[0] : "");
-    const count = Array.isArray(x.images)
-      ? x.images.length
-      : (x.image ? 1 : 0);
+    const photos = [
+      ...(Array.isArray(x.images) ? x.images : []),
+      ...(x.image ? [x.image] : []),
+      ...(x.cover ? [x.cover] : [])
+    ].filter((p, j, arr) => p && arr.indexOf(p) === j);
+
+    const cover = x.image || x.cover || photos[0] || "";
+    const count = photos.length;
 
     return `
       <article class="gallery-box"
         role="button"
         tabindex="0"
+        aria-label="Otvori album ${esc(x.title || "Album")}"
         onclick="openGalleryAlbum(${i})"
-        onkeydown="if(event.key==='Enter'){openGalleryAlbum(${i})}"
+        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openGalleryAlbum(${i})}"
         style="cursor:pointer;overflow:hidden">
         ${cover ? `
           <img src="${esc(asset(cover))}"
@@ -57,7 +59,7 @@ if (gg) {
         ` : ""}
         <div style="padding:10px">
           <strong>${esc(x.title || "Album")}</strong>
-          <div>${count} fotografija</div>
+          <div>${count} ${count === 1 ? "fotografija" : "fotografija"}</div>
         </div>
       </article>`;
   }).join("");
