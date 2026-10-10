@@ -98,6 +98,7 @@ collections:
               - {label: "Galerija", name: "gallery", widget: "boolean", default: true}
               - {label: "Predsjedništvo", name: "board", widget: "boolean", default: true}
               - {label: "Kontakt", name: "contact", widget: "boolean", default: true}
+      
       - name: "novosti"
         label: "Novosti"
         file: "content/news.json"
@@ -112,16 +113,25 @@ collections:
               - {label: "Fotografija", name: "image", widget: "image", required: false}
               - {label: "Kratki tekst", name: "excerpt", widget: "text"}
               - {label: "Sadržaj", name: "body", widget: "richtext", required: false}
+
       - name: "galerija"
         label: "Galerija"
         file: "content/gallery.json"
         fields:
-          - label: "Fotografije"
+          - label: "Albumi"
             name: "items"
             widget: "list"
             fields:
-              - {label: "Naziv", name: "title", widget: "string"}
-              - {label: "Fotografija", name: "image", widget: "image"}
+              - {label: "Naziv albuma", name: "title", widget: "string"}
+              - {label: "Naslovna fotografija", name: "image", widget: "image"}
+              - label: "Fotografije albuma"
+                name: "images"
+                widget: "list"
+                field:
+                  label: "Fotografija"
+                  name: "image"
+                  widget: "image"
+
       - name: "dokumenti"
         label: "Dokumenti"
         file: "content/documents.json"
