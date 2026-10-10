@@ -9,7 +9,10 @@
     },
     {
       "title": "FEDA",
-      "image": "uploads/f1166498-92af-436f-ae7f-76d59b85bbf8.jpg"
+      "image": "uploads/f1166498-92af-436f-ae7f-76d59b85bbf8.jpg",
+      "images": [
+        "uploads/screenshot_26.jpg"
+      ]
     }
   ]
 }
