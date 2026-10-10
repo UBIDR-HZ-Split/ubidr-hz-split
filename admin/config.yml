@@ -114,7 +114,7 @@ collections:
               - {label: "Kratki tekst", name: "excerpt", widget: "text"}
               - {label: "Sadržaj", name: "body", widget: "richtext", required: false}
 
-      - name: "galerija"
+- name: "galerija"
         label: "Galerija"
         file: "content/gallery.json"
         fields:
@@ -126,11 +126,11 @@ collections:
               - {label: "Naslovna fotografija", name: "image", widget: "image"}
               - label: "Fotografije u albumu"
                 name: "images"
-                widget: "list"
-                field:
-                  label: "Fotografija"
-                  name: "image"
-                  widget: "image"
+                widget: "image"
+                required: false
+                media_library:
+                  config:
+                    multiple: true
 
       - name: "dokumenti"
         label: "Dokumenti"
