@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://ubidr-hz-split.github.io/ubidr-hz-split/sitemap.xml
+Sitemap: https://ubidra.top/sitemap.xml

@@ -1,0 +1,10 @@
+U POSTOJECEM index.html pronadi <head> i postojece title/meta oznake. Uredi postojece oznake, nemoj dodavati duplikate i nemoj zamijeniti cijeli index.html.
+
+<title>UBIDR-HŽ Split – Hrvatski branitelji Hrvatskih željeznica</title>
+<meta name="description" content="UBIDR-HŽ Split – Udruga branitelja i invalida Domovinskog rata Hrvatskih željeznica. Informacije o hrvatskim braniteljima, HŽ braniteljima, aktivnostima udruge, novostima i kontaktima.">
+<link rel="canonical" href="https://ubidra.top/">
+<meta property="og:title" content="UBIDR-HŽ Split – Hrvatski branitelji Hrvatskih željeznica">
+<meta property="og:description" content="Udruga branitelja i invalida Domovinskog rata Hrvatskih željeznica – Podružnica Split.">
+<meta property="og:url" content="https://ubidra.top/">
+
+Napomena: Google ne koristi meta keywords za rangiranje. Ključne izraze treba prirodno uključiti i u vidljivi tekst stranice.
