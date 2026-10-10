@@ -37,29 +37,78 @@ const d=await getJSON("content/documents.json"),dg=document.querySelector('#doku
 }catch(e){console.warn('UBIDR content loader:',e)}})();
 
 async function openNews(i){
-  try{
-    const n=await (await fetch('content/news.json?'+Date.now())).json();
-    const x=n.items[i];
-    if(!x)return;
+  try {
+    const n = await getJSON("content/news.json");
+    const x = n.items[i];
+    if (!x) return;
 
-    let old=document.getElementById('news-modal');
-    if(old)old.remove();
+    document.getElementById("news-modal")?.remove();
 
-    const modal=document.createElement('div');
-    modal.id='news-modal';
-    modal.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;padding:20px;overflow:auto';
+    const modal = document.createElement("div");
+    modal.id = "news-modal";
+    modal.style.cssText = `
+      position:fixed; inset:0; z-index:99999;
+      background:rgba(0,0,0,.78);
+      display:flex; align-items:center; justify-content:center;
+      padding:16px; box-sizing:border-box;
+    `;
 
-    modal.innerHTML=`
-      <div style="background:white;color:#222;max-width:850px;width:100%;max-height:90vh;overflow:auto;border-radius:12px;padding:25px;position:relative">
-        <button id="close-news" style="position:sticky;top:0;float:right;background:#090a73;color:white;border:0;border-radius:6px;padding:10px 15px;cursor:pointer">✕ Zatvori</button>
-        ${x.image?`<img src="${esc(asset(x.image))}" alt="${esc(x.title||'')}" style="width:100%;max-height:400px;object-fit:contain;border-radius:8px">`:''}
-        <p style="color:#870000">${esc(x.date?new Date(x.date).toLocaleDateString('hr-HR'):'')}</p>
-        <h2>${esc(x.title||'')}</h2>
-        <p style="white-space:pre-line;line-height:1.7">${esc(x.body||x.description||x.text||x.excerpt||'')}</p>
+    const photos = [x.image, ...(Array.isArray(x.images) ? x.images : [])]
+      .filter(Boolean);
+
+    modal.innerHTML = `
+      <div style="background:#fff;color:#222;max-width:850px;width:100%;
+        max-height:90vh;overflow:auto;border-radius:12px;padding:22px;
+        box-sizing:border-box">
+        <button id="news-close" style="float:right;background:#090A73;
+          color:white;border:0;border-radius:6px;padding:10px 15px;
+          cursor:pointer">✕ Zatvori</button>
+        <div style="clear:both"></div>
+        <p style="color:#80621c">
+          ${esc(x.date ? new Date(x.date).toLocaleDateString('hr-HR') : '')}
+        </p>
+        <h2>${esc(x.title || '')}</h2>
+        <div style="font-size:16px;line-height:1.8;white-space:pre-wrap">
+          ${esc(x.body || x.description || x.text || x.excerpt || '')}
+        </div>
+        <div id="news-photos" style="margin-top:20px"></div>
       </div>`;
 
     document.body.appendChild(modal);
-    document.getElementById('close-news').onclick=()=>modal.remove();
-    modal.onclick=e=>{if(e.target===modal)modal.remove()};
-  }catch(e){console.error(e);alert('Novost se ne može otvoriti.');}
+
+    const photosBox = modal.querySelector("#news-photos");
+    if (photos.length) {
+      let current = 0;
+
+      function showPhoto() {
+        photosBox.innerHTML = `
+          <img src="${esc(asset(photos[current]))}"
+            alt="${esc(x.title || '')}"
+            style="display:block;width:100%;max-height:55vh;object-fit:contain">
+          <div style="display:flex;justify-content:space-between;
+            align-items:center;margin-top:10px;gap:12px">
+            <button id="photo-prev" ${current===0?'disabled':''}>‹ Prethodna</button>
+            <span>${current+1} / ${photos.length}</span>
+            <button id="photo-next" ${current===photos.length-1?'disabled':''}>Sljedeća ›</button>
+          </div>`;
+
+        photosBox.querySelector("#photo-prev").onclick = () => {
+          if (current > 0) { current--; showPhoto(); }
+        };
+        photosBox.querySelector("#photo-next").onclick = () => {
+          if (current < photos.length - 1) { current++; showPhoto(); }
+        };
+      }
+
+      showPhoto();
+    }
+
+    modal.querySelector("#news-close").onclick = () => modal.remove();
+    modal.onclick = e => {
+      if (e.target === modal) modal.remove();
+    };
+  } catch (e) {
+    console.error(e);
+    alert("Novost se ne može otvoriti.");
+  }
 }
