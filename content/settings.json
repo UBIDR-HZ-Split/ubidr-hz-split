@@ -86,9 +86,9 @@
   "hero_label": "Podružnica Split",
   "colors": {
     "navy": "#090a73",
-    "blue": "#1648be",
-    "red": "#870808",
-    "gold": "#e39e3f"
+    "blue": "#c9a34e",
+    "red": "#ffffff",
+    "gold": "#222638"
   },
   "board_eyebrow": "Uprava podružnice",
   "about_cards": [
