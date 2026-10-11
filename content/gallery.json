@@ -4,35 +4,6 @@
       "title": "UBIDR-HŽ Podružnica Split",
       "image": "hero.jpg",
       "images": []
-    },
-    {
-      "title": "TESTNA GALERIJA",
-      "image": "uploads/screenshot_16.jpg",
-      "images": [
-        "uploads/galerija/testna-galerija/1.jpg",
-        "uploads/galerija/testna-galerija/Screenshot_6.jpg",
-        "uploads/galerija/testna-galerija/Screenshot_8.jpg",
-        "uploads/galerija/testna-galerija/Screenshot_9.jpg",
-        "uploads/galerija/testna-galerija/Screenshot_10.jpg",
-        "uploads/galerija/testna-galerija/Screenshot_11.jpg",
-        "uploads/galerija/testna-galerija/Screenshot_12.jpg",
-        "uploads/galerija/testna-galerija/Screenshot_13.jpg",
-        "uploads/galerija/testna-galerija/Screenshot_14.jpg",
-        "uploads/galerija/testna-galerija/Screenshot_15.jpg",
-        "uploads/galerija/testna-galerija/Screenshot_16.jpg",
-        "uploads/galerija/testna-galerija/Screenshot_17.jpg",
-        "uploads/galerija/testna-galerija/Screenshot_18.jpg",
-        "uploads/galerija/testna-galerija/Screenshot_19.jpg",
-        "uploads/galerija/testna-galerija/Screenshot_23.jpg",
-        "uploads/galerija/testna-galerija/Screenshot_24.jpg",
-        "uploads/galerija/testna-galerija/Screenshot_25.jpg",
-        "uploads/galerija/testna-galerija/Screenshot_26.jpg",
-        "uploads/galerija/testna-galerija/Screenshot_27.jpg",
-        "uploads/galerija/testna-galerija/Screenshot_28.jpg",
-        "uploads/galerija/testna-galerija/Screenshot_29.jpg",
-        "uploads/galerija/testna-galerija/Screenshot_30.jpg",
-        "uploads/galerija/testna-galerija/Screenshot_31.jpg"
-      ]
     }
   ]
 }
