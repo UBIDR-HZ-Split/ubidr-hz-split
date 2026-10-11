@@ -7,7 +7,10 @@
     },
     {
       "title": "TESTNA GALERIJA",
-      "image": "uploads/screenshot_16.jpg"
+      "image": "uploads/screenshot_16.jpg",
+      "images": [
+        "uploads/galerija/testna-galerija/1.jpg"
+      ]
     }
   ]
 }
