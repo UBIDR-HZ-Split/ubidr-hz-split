@@ -19,6 +19,36 @@ setText('#onama .eyebrow',s.about_eyebrow);setText('#onama h2',s.about_title);se
 const qc=document.querySelector('#onama .quick');if(qc)qc.innerHTML=(s.about_cards||[]).map(x=>`<div class="quick-card"><h3>${esc(x.title)}</h3><p>${esc(x.text)}</p></div>`).join('');
 setText('#ciljevi .eyebrow',s.goals_eyebrow);setText('#ciljevi h2',s.goals_title);const fg=document.querySelector('#ciljevi .features');if(fg)fg.innerHTML=(s.goals||[]).map(x=>`<div class="feature"><div class="icon">${esc(x.icon)}</div><h3>${esc(x.title)}</h3><p>${esc(x.text)}</p></div>`).join('');
 setText('#novosti .eyebrow',s.news_eyebrow);setText('#novosti h2',s.news_title);
+  
+const newsData = await getJSON("content/news.json");
+const newsContainer = document.querySelector("#novosti .news");
+
+if (newsContainer) {
+  const items = Array.isArray(newsData.items) ? newsData.items : [];
+
+  items.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+
+  newsContainer.innerHTML = items.map((x, i) => `
+    <article class="news-card"
+      role="button"
+      tabindex="0"
+      style="cursor:pointer"
+      onclick="openNews(${i})"
+      onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openNews(${i})}">
+      ${
+        x.image
+          ? `<img src="${esc(asset(x.image))}" alt="${esc(x.title || "Novost")}" style="width:100%;height:160px;object-fit:cover">`
+          : `<div class="news-img">${esc(x.category || "NOVOST")}</div>`
+      }
+      <div class="news-body">
+        <div class="news-date">${formatHrDate(x.date)}</div>
+        <h3>${esc(x.title || "")}</h3>
+        <p>${esc(x.excerpt || "")}</p>
+        <span class="btn" style="margin-top:14px">Pročitaj više</span>
+      </div>
+    </article>
+  `).join("");
+}
 setText('#dokumenti .eyebrow',s.documents_eyebrow);setText('#dokumenti h2',s.documents_title);
 setText('#galerija .eyebrow',s.gallery_eyebrow);setText('#galerija h2',s.gallery_title);setText('#galerija .lead',s.gallery_intro);
 setText('#predsjednistvo .eyebrow',s.board_eyebrow);setText('#predsjednistvo h2',s.board_title);const board=document.querySelector("#predsjednistvo .board");if(board){board.innerHTML=(Array.isArray(s.board)?s.board:[]).map(x=>`<div class="person"><strong>${esc(x.role||"")}</strong><span>${esc(x.name||"")}</span></div>`).join("");}
