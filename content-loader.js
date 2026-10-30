@@ -14,78 +14,6 @@ function esc(value = "") {
   }[character]));
 }
 
-function renderNewsText(value = "") {
-  const input = String(value);
-  const parsed = new DOMParser().parseFromString(input, "text/html");
-  const allowedTags = new Set(["P", "BR", "STRONG", "B", "EM", "I", "U", "S", "UL", "OL", "LI", "A"]);
-
-  function cleanNode(node) {
-    if (node.nodeType === Node.TEXT_NODE) {
-      const fragment = document.createDocumentFragment();
-      const urlPattern = /(https?:\/\/[^\s<]+)/g;
-      let lastIndex = 0;
-      const text = node.nodeValue || "";
-      let match;
-
-      while ((match = urlPattern.exec(text)) !== null) {
-        fragment.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
-        const link = document.createElement("a");
-        link.href = match[0].replace(/[.,!?;:)]+$/, "");
-        link.textContent = link.href;
-        if (/ubidra\.top\/#galerija$/i.test(link.href) || link.href === "#galerija") {
-          link.href = "#galerija";
-        } else {
-          link.target = "_blank";
-          link.rel = "noopener noreferrer";
-        }
-        fragment.appendChild(link);
-        const trailing = match[0].slice(link.href.length);
-        if (trailing) fragment.appendChild(document.createTextNode(trailing));
-        lastIndex = match.index + match[0].length;
-      }
-
-      fragment.appendChild(document.createTextNode(text.slice(lastIndex)));
-      return fragment;
-    }
-
-    if (node.nodeType !== Node.ELEMENT_NODE) {
-      return document.createDocumentFragment();
-    }
-
-    const tag = node.tagName;
-    if (!allowedTags.has(tag)) {
-      const fragment = document.createDocumentFragment();
-      node.childNodes.forEach(child => fragment.appendChild(cleanNode(child)));
-      return fragment;
-    }
-
-    const element = document.createElement(tag.toLowerCase());
-
-    if (tag === "A") {
-      const href = node.getAttribute("href") || "";
-      if (/^(https?:\/\/|#galerija)/i.test(href)) {
-        const isGalleryLink = href === "#galerija" || /ubidra\.top\/#galerija$/i.test(href);
-        element.setAttribute("href", isGalleryLink ? "#galerija" : href);
-        if (!isGalleryLink && /^https?:\/\//i.test(href)) {
-          element.setAttribute("target", "_blank");
-          element.setAttribute("rel", "noopener noreferrer");
-        }
-      } else {
-        const fragment = document.createDocumentFragment();
-        node.childNodes.forEach(child => fragment.appendChild(cleanNode(child)));
-        return fragment;
-      }
-    }
-
-    node.childNodes.forEach(child => element.appendChild(cleanNode(child)));
-    return element;
-  }
-
-  const output = document.createElement("div");
-  parsed.body.childNodes.forEach(node => output.appendChild(cleanNode(node)));
-  return output.innerHTML;
-}
-
 function setText(selector, value) {
   const element = document.querySelector(selector);
   if (element && value !== undefined) element.textContent = value;
@@ -415,18 +343,10 @@ async function openNews(index) {
         <p style="color:#80621c">${formatHrDate(item.date)}</p>
         ${item.category ? `<p>${esc(item.category)}</p>` : ""}
         <h2>${esc(item.title || "")}</h2>
-        <div class="news-content" style="font-size:16px;line-height:1.8;white-space:pre-wrap">${renderNewsText(item.body || item.content || item.description || item.text || item.excerpt || "")}</div>
+        <div style="font-size:16px;line-height:1.8;white-space:pre-wrap">${esc(item.body || item.content || item.description || item.text || item.excerpt || "")}</div>
         ${photos.length > 1 ? `<div id="news-photos" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-top:20px">${photos.slice(1).map((photo, photoIndex) => `<button type="button" data-photo-index="${photoIndex + 1}" style="border:0;padding:0;background:transparent;cursor:zoom-in"><img src="${esc(asset(photo))}" alt="${esc(item.title || "Fotografija")} ${photoIndex + 2}" loading="lazy" style="width:100%;height:120px;object-fit:cover;border-radius:7px;display:block"></button>`).join("")}</div>` : ""}
       </article>`;
     document.body.appendChild(modal);
-
-    modal.querySelectorAll('a[href="#galerija"]').forEach(link => {
-      link.addEventListener("click", event => {
-        event.preventDefault();
-        modal.remove();
-        document.querySelector("#galerija")?.scrollIntoView({ behavior: "smooth" });
-      });
-    });
 
     modal.querySelector("#news-close").onclick = () => modal.remove();
     modal.onclick = event => { if (event.target === modal) modal.remove(); };
@@ -443,5 +363,55 @@ async function openNews(index) {
   } catch (error) {
     console.error("UBIDR otvaranje novosti:", error);
     alert("Novost se ne može otvoriti.");
+  }
+}
+
+async function openGalleryAlbum(index) {
+  try {
+    let albums = window.ubidrGalleryItems;
+    if (!Array.isArray(albums)) {
+      const data = await getJSON("content/gallery.json");
+      albums = Array.isArray(data.items) ? data.items : [];
+    }
+    const album = albums[index];
+    if (!album) return;
+
+    document.getElementById("gallery-modal")?.remove();
+    document.getElementById("photo-viewer")?.remove();
+
+    const photos = [
+      ...(Array.isArray(album.images) ? album.images : []),
+      ...(album.image ? [album.image] : []),
+      ...(album.cover ? [album.cover] : [])
+    ].filter((photo, photoIndex, all) => photo && all.indexOf(photo) === photoIndex);
+
+    const modal = document.createElement("div");
+    modal.id = "gallery-modal";
+    modal.style.cssText = "position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box";
+    modal.innerHTML = `
+      <section style="background:#fff;color:#222;max-width:1000px;width:100%;max-height:90vh;overflow:auto;border-radius:12px;padding:20px;box-sizing:border-box">
+        <button type="button" id="gallery-close" style="float:right;background:#090A73;color:white;border:0;border-radius:6px;padding:10px 15px;cursor:pointer">✕ Zatvori album</button>
+        <div style="clear:both"></div>
+        <h2 style="margin-top:8px">${esc(album.title || "Galerija")}</h2>
+        <p>${photos.length} fotografija</p>
+        <div id="gallery-album-photos" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px"></div>
+      </section>`;
+    document.body.appendChild(modal);
+
+    const photoGrid = modal.querySelector("#gallery-album-photos");
+    photoGrid.innerHTML = photos.map((photo, photoIndex) => `
+      <button type="button" data-photo-index="${photoIndex}" style="border:0;padding:0;background:transparent;cursor:zoom-in">
+        <img src="${esc(asset(photo))}" alt="${esc(album.title || "Galerija")} ${photoIndex + 1}" loading="lazy" style="width:100%;height:135px;object-fit:cover;border-radius:7px;display:block">
+      </button>
+    `).join("");
+
+    photoGrid.querySelectorAll("[data-photo-index]").forEach(button => {
+      button.onclick = () => showPhotoViewer(album.title, photos, Number(button.dataset.photoIndex));
+    });
+    modal.querySelector("#gallery-close").onclick = () => modal.remove();
+    modal.onclick = event => { if (event.target === modal) modal.remove(); };
+  } catch (error) {
+    console.error("UBIDR otvaranje albuma:", error);
+    alert("Album se ne može otvoriti.");
   }
 }
