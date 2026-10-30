@@ -393,10 +393,10 @@ async function openNews(index) {
     modal.onclick = event => { if (event.target === modal) modal.remove(); };
 
     // Poveznica #album-... zatvara novost i otvara traženi album.
-    modal.querySelectorAll("a[data-album-slug]").forEach(link => {
+    modal.querySelectorAll('a[href^="#album-"]').forEach(link => {
       link.addEventListener("click", event => {
         event.preventDefault();
-        const slug = link.dataset.albumSlug;
+        const slug = decodeURIComponent(link.getAttribute("href").slice(7)).toLowerCase();
         const albums = window.ubidrGalleryItems || [];
         const albumIndex = albums.findIndex(album => albumSlug(album) === slug);
         if (albumIndex === -1) {
@@ -473,3 +473,7 @@ async function openGalleryAlbum(index) {
     alert("Album se ne može otvoriti.");
   }
 }
+
+// Funkcije moraju biti dostupne i inline onclick pozivima u HTML-u.
+window.openGalleryAlbum = openGalleryAlbum;
+window.openNews = openNews;
