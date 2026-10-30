@@ -49,6 +49,47 @@ function closeContentModal() {
   document.getElementById("photo-viewer")?.remove();
 }
 
+function albumSlug(album = {}) {
+  const source = album.slug || album.title || "";
+  return String(source)
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+// Decap CMS Markdown poveznice pretvara u sigurne HTML poveznice.
+// Posebni oblik #album-naziv otvara odgovarajući album u galeriji.
+function renderNewsBody(value = "") {
+  const source = String(value);
+  const linkPattern = /\[([^\]]+)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;
+  let result = "";
+  let lastIndex = 0;
+  let match;
+
+  while ((match = linkPattern.exec(source)) !== null) {
+    result += esc(source.slice(lastIndex, match.index));
+    const label = esc(match[1]);
+    const href = match[2];
+
+    if (/^#album-[a-z0-9-]+$/i.test(href)) {
+      result += `<a href="${esc(href)}" data-album-slug="${esc(href.slice(7))}" style="color:#090A73;text-decoration:underline;font-weight:600">${label}</a>`;
+    } else if (/^(https?:\/\/|mailto:|#)/i.test(href)) {
+      const external = /^https?:\/\//i.test(href);
+      result += `<a href="${esc(href)}"${external ? ' target="_blank" rel="noopener noreferrer"' : ""} style="color:#090A73;text-decoration:underline">${label}</a>`;
+    } else {
+      result += label;
+    }
+
+    lastIndex = linkPattern.lastIndex;
+  }
+
+  result += esc(source.slice(lastIndex));
+  return result.replace(/\r\n|\r|\n/g, "<br>");
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
   // Postavke se učitavaju odvojeno da greška u jednoj datoteci
   // ne spriječi prikaz novosti, galerije i dokumenata.
@@ -343,13 +384,30 @@ async function openNews(index) {
         <p style="color:#80621c">${formatHrDate(item.date)}</p>
         ${item.category ? `<p>${esc(item.category)}</p>` : ""}
         <h2>${esc(item.title || "")}</h2>
-        <div style="font-size:16px;line-height:1.8;white-space:pre-wrap">${esc(item.body || item.content || item.description || item.text || item.excerpt || "")}</div>
+        <div class="news-rich-text" style="font-size:16px;line-height:1.8;white-space:normal">${renderNewsBody(item.body || item.content || item.description || item.text || item.excerpt || "")}</div>
         ${photos.length > 1 ? `<div id="news-photos" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-top:20px">${photos.slice(1).map((photo, photoIndex) => `<button type="button" data-photo-index="${photoIndex + 1}" style="border:0;padding:0;background:transparent;cursor:zoom-in"><img src="${esc(asset(photo))}" alt="${esc(item.title || "Fotografija")} ${photoIndex + 2}" loading="lazy" style="width:100%;height:120px;object-fit:cover;border-radius:7px;display:block"></button>`).join("")}</div>` : ""}
       </article>`;
     document.body.appendChild(modal);
 
     modal.querySelector("#news-close").onclick = () => modal.remove();
     modal.onclick = event => { if (event.target === modal) modal.remove(); };
+
+    // Poveznica #album-... zatvara novost i otvara traženi album.
+    modal.querySelectorAll("a[data-album-slug]").forEach(link => {
+      link.addEventListener("click", event => {
+        event.preventDefault();
+        const slug = link.dataset.albumSlug;
+        const albums = window.ubidrGalleryItems || [];
+        const albumIndex = albums.findIndex(album => albumSlug(album) === slug);
+        if (albumIndex === -1) {
+          alert("Traženi album nije pronađen u galeriji.");
+          return;
+        }
+        modal.remove();
+        openGalleryAlbum(albumIndex);
+      });
+    });
+
     modal.querySelectorAll("[data-photo-index]").forEach(button => {
       button.onclick = () => showPhotoViewer(item.title, photos, Number(button.dataset.photoIndex));
     });
